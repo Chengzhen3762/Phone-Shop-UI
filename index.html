@@ -7,13 +7,12 @@
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#f6f6f8">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
-        /* THIS CONTROLS THE CAMERA NOTCH AREA */
         html, body {
             margin: 0;
             padding: 0;
@@ -23,7 +22,6 @@
             transition: background-color 0.4s ease;
         }
 
-        /* WHEN DARK MODE IS ACTIVE, CHANGE NOTCH AREA TO DARK */
         html.dark, body.dark {
             background-color: #121212 !important;
         }
@@ -61,7 +59,6 @@
             }
         }
 
-        /* ====== LIQUID GLASS EFFECT ====== */
         .glass {
             background: rgba(255, 255, 255, 0.65) !important;
             backdrop-filter: blur(20px) !important;
@@ -131,6 +128,7 @@
             object-fit: cover;
         }
 
+        /* ====== BUTTON ANIMATIONS ====== */
         .spec-radio { display: none; }
         .spec-label {
             display: inline-block;
@@ -141,10 +139,9 @@
             font-weight: 600;
             font-size: 13px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-in-out; 
             white-space: nowrap;
         }
-
         .spec-radio:checked + .spec-label {
             background: #1c1c1e;
             color: white;
@@ -152,8 +149,53 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
         }
 
-        #phonePrice { color: #B45325; transition: color 0.5s ease; }
+        /* ====== PERFECTED LIQUID GLASS RAM CSS ====== */
+        .ease-bouncy {
+            transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        /* Layer 1: Goo Backgrounds */
+        .goo-container { background-color: #f6f6f8; }
+        .dark-mode .goo-container { background-color: #121212 !important; }
+        
+        .goo-bg { background-color: #e5e5ea; }
+        .dark-mode .goo-bg { background-color: #2d2d30 !important; }
 
+        /* Layer 2: Active Highlight */
+        .active-highlight {
+            background-color: #1c1c1e;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        .dark-mode .active-highlight {
+            background-color: #f6f6f8 !important;
+        }
+
+        /* Layer 3: Text Labels */
+        .ram-text-label {
+            color: #8e8e93;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            background: transparent !important;
+            box-shadow: none !important;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, color 0.3s ease;
+        }
+        .dark-mode .ram-text-label {
+            color: #a1a1aa;
+        }
+
+        /* Text color smoothly turns to contrasting active color */
+        #r0:checked ~ #ramLabel0,
+        #r1:checked ~ #ramLabel1 {
+            color: white !important;
+        }
+        .dark-mode #r0:checked ~ #ramLabel0,
+        .dark-mode #r1:checked ~ #ramLabel1 {
+            color: #1c1c1e !important;
+        }
+
+        /* ====== ROLLING PRICE ANIMATION ====== */
+        #phonePrice { color: #B45325; transition: color 0.5s ease; }
         .digit-container { display: inline-block; height: 1em; line-height: 1em; overflow: hidden; vertical-align: top; position: relative; }
         .digit-track { display: block; }
         .digit-track > span { display: block; height: 1em; line-height: 1em; text-align: center; }
@@ -225,6 +267,16 @@
 </head>
 <body>
 
+<svg style="visibility: hidden; position: absolute;" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <defs>
+        <filter id="goo" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+        </filter>
+    </defs>
+</svg>
+
 <div id="app-container">
     
     <div id="menuBackdrop" class="absolute inset-0 bg-black/40 z-40 opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleMenu()"></div>
@@ -276,6 +328,7 @@
             <div id="searchResults" class="flex flex-col gap-3 hidden"></div>
         </div>
     </div>
+
     <div id="screen1" class="screen active px-8">
         <div class="flex justify-between items-center mb-6">
             <div class="relative cursor-pointer hover:scale-110 transition-transform" onclick="toggleMenu()">
@@ -297,7 +350,7 @@
         </div>
         <div class="carousel" id="brandCarousel"></div>
         <div class="mt-auto mb-14 flex justify-center">
-            <button onclick="goToScreen(2)" class="bg-[#1c1c1e] text-white px-8 py-3.5 rounded-full font-semibold text-[15px] flex items-center gap-2 hover:scale-105 transition-transform shadow-xl">
+            <button onclick="goToScreen(2)" class="bg-[#1c1c1e] text-white px-8 py-3.5 rounded-full font-semibold text-[15px] flex items-center gap-2 hover:scale-105 transition-all duration-200 shadow-xl">
                 Continue ➔
             </button>
         </div>
@@ -318,7 +371,7 @@
         </div>
         <div class="carousel" id="modelCarousel"></div>
         <div class="mt-auto mb-14 flex justify-center">
-            <button onclick="goToScreen(3)" class="bg-[#1c1c1e] text-white px-8 py-3.5 rounded-full font-semibold text-[15px] flex items-center gap-2 hover:scale-105 transition-transform shadow-xl">
+            <button onclick="goToScreen(3)" class="bg-[#1c1c1e] text-white px-8 py-3.5 rounded-full font-semibold text-[15px] flex items-center gap-2 hover:scale-105 transition-all duration-200 shadow-xl">
                 Configure ➔
             </button>
         </div>
@@ -335,7 +388,8 @@
         <div class="mt-6 relative z-10 h-48 w-full" id="phoneImageContainer">
             <img id="selectedPhoneImg" src="" class="absolute top-0 left-0 w-full h-48 object-contain filter drop-shadow-2xl" alt="Selected Phone">
         </div>
-        <div class="mt-8 space-y-5 relative z-10 text-center">
+        
+        <div class="mt-8 mb-10 space-y-5 relative z-10 text-center">
             <div>
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3">Color</p>
                 <div id="colorContainer" class="flex justify-center gap-2 flex-wrap"></div>
@@ -346,15 +400,43 @@
             </div>
             <div>
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3">Memory (RAM)</p>
-                <div id="ramContainer" class="flex justify-center gap-3 flex-wrap"></div>
+                
+                <div class="relative w-full h-10 flex justify-center items-center">
+                    
+                    <div class="absolute inset-0 flex justify-center items-center pointer-events-none goo-container" style="filter: url(#goo); z-index: 0;">
+                        <div id="gooBg1" class="absolute z-10 w-[104px] h-10 goo-bg rounded-full transition-all duration-700 ease-bouncy"></div>
+                        <div id="gooBg2" class="absolute z-20 w-[104px] h-10 goo-bg rounded-full transition-all duration-700 ease-bouncy scale-50 opacity-0"></div>
+                    </div>
+
+                    <div class="absolute inset-0 flex justify-center items-center pointer-events-none" style="z-index: 10;">
+                        <div id="activeHighlight" class="absolute w-[104px] h-10 active-highlight rounded-full transition-all duration-[600ms] ease-bouncy"></div>
+                    </div>
+                    
+                    <div id="ramContainer" class="relative w-full h-full flex justify-center items-center" style="z-index: 20;">
+                        
+                        <input type="radio" name="ram" id="r0" class="spec-radio" checked>
+                        <label for="r0" id="ramLabel0" class="ram-text-label absolute flex justify-center items-center gap-1.5 w-[104px] h-10" style="z-index: 30; transform: translateX(0px);">
+                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+                            <span id="ramText0" class="flex items-center"></span>
+                        </label>
+
+                        <input type="radio" name="ram" id="r1" class="spec-radio">
+                        <label for="r1" id="ramLabel1" class="ram-text-label absolute flex justify-center items-center gap-1.5 w-[104px] h-10" style="z-index: 40; opacity: 0; pointer-events: none; transform: translateX(0px) scale(0.8);">
+                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+                            <span id="ramText1" class="flex items-center"></span>
+                        </label>
+
+                    </div>
+                </div>
+
             </div>
         </div>
         
         <div class="mt-auto mb-14 flex flex-row justify-center gap-4 z-10 px-2">
-            <button onclick="addToCart()" class="flex-1 bg-white text-[#1c1c1e] border border-[#1c1c1e]/10 py-4 rounded-full font-semibold text-[15px] hover:scale-105 transition-transform shadow-lg shadow-black/5">
+            <button onclick="addToCart()" class="flex-1 bg-white text-[#1c1c1e] border border-[#1c1c1e]/10 py-4 rounded-full font-semibold text-[15px] hover:scale-105 transition-all duration-200 shadow-lg shadow-black/5">
                 Add to Cart
             </button>
-            <button onclick="startProcessing()" class="flex-1 bg-[#1c1c1e] text-white py-4 rounded-full font-semibold text-[15px] hover:scale-105 transition-transform shadow-xl">
+            <button onclick="startProcessing()" class="flex-1 bg-[#1c1c1e] text-white py-4 rounded-full font-semibold text-[15px] hover:scale-105 transition-all duration-200 shadow-xl">
                 Buy
             </button>
         </div>
@@ -379,7 +461,7 @@
         <h2 class="text-[22px] font-medium text-gray-800 text-center leading-snug">Your phone is ready,<br>Enjoy!</h2>
         <img id="finalImg" src="" class="h-80 object-contain filter drop-shadow-2xl mt-8" alt="Phone">
         <div class="mt-auto mb-14 flex justify-center w-full">
-            <button onclick="goToScreen(1)" class="bg-[#1c1c1e] text-white px-8 py-3.5 rounded-full text-[15px] font-semibold hover:scale-105 transition-transform shadow-lg flex items-center gap-2 tracking-wide">
+            <button onclick="goToScreen(1)" class="bg-[#1c1c1e] text-white px-8 py-3.5 rounded-full text-[15px] font-semibold hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-2 tracking-wide">
                 Thanks ➔
             </button>
         </div>
@@ -400,13 +482,13 @@
                 <span class="text-gray-500 font-semibold text-[15px]">Total Price</span>
                 <span id="cartTotalPrice" class="text-2xl font-bold text-[#B45325]">0元</span>
             </div>
-            <button onclick="goToScreen(1)" class="w-full bg-[#1c1c1e] text-white py-4 rounded-full text-[15px] font-semibold hover:scale-105 transition-transform shadow-xl">
+            <button onclick="goToScreen(1)" class="w-full bg-[#1c1c1e] text-white py-4 rounded-full text-[15px] font-semibold hover:scale-105 transition-all duration-200 shadow-xl">
                 Continue Shopping
             </button>
         </div>
     </div>
 
-    <div id="screen7" class="screen px-6 items-center bg-[#f6f6f8]">
+    <div id="screen7" class="screen pt-20 px-6 items-center bg-[#f6f6f8]">
         <button onclick="goToScreen(3)" class="absolute top-12 left-6 w-10 h-10 bg-white shadow-sm border border-gray-100 rounded-full flex items-center justify-center text-gray-800 hover:bg-gray-50 transition hover:scale-105">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </button>
@@ -416,7 +498,7 @@
         <h2 class="text-[28px] font-bold text-gray-800 text-center tracking-tight leading-tight mb-8">Item added<br>to cart!</h2>
         <div id="singleAddedItem" class="w-full"></div>
         <div class="mt-auto mb-14 flex flex-col gap-4 w-full">
-            <button onclick="goToScreen(1)" class="w-full bg-[#1c1c1e] text-white py-4 rounded-full text-[15px] font-semibold hover:scale-105 transition-transform shadow-xl">
+            <button onclick="goToScreen(1)" class="w-full bg-[#1c1c1e] text-white py-4 rounded-full text-[15px] font-semibold hover:scale-105 transition-all duration-200 shadow-xl">
                 Continue Shopping
             </button>
         </div>
@@ -487,7 +569,7 @@
         </div>
 
         <div class="mt-auto mb-14 absolute bottom-0 left-0 w-full px-6 pb-10">
-            <button onclick="saveProfile()" class="w-full bg-[#1c1c1e] text-white py-4 rounded-full text-[15px] font-semibold hover:scale-105 transition-transform shadow-xl">
+            <button onclick="saveProfile()" class="w-full bg-[#1c1c1e] text-white py-4 rounded-full text-[15px] font-semibold hover:scale-105 transition-all duration-200 shadow-xl">
                 Save Changes
             </button>
         </div>
@@ -497,6 +579,7 @@
 
 <script>
     let myCart = []; 
+    let previousRamOptions = [];
     
     let currentUser = {
         name: "User",
@@ -844,6 +927,23 @@
         window.mCarousel = new ArcCarousel('modelCarousel');
         bCarousel.updateItems(); 
         updateGreeting();
+        
+        document.querySelectorAll('input[name="ram"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                updatePrice(e.target.dataset.price + '元');
+                const offset = 58;
+                const activeHighlight = document.getElementById('activeHighlight');
+                
+                // Only slide the highlight if there are two options visible
+                if (document.getElementById('ramLabel1').style.opacity === '1') {
+                    if (e.target.id === 'r1') {
+                        activeHighlight.style.transform = `translateX(${offset}px)`;
+                    } else {
+                        activeHighlight.style.transform = `translateX(-${offset}px)`;
+                    }
+                }
+            });
+        });
     };
 
     function goToScreen(n) {
@@ -869,7 +969,7 @@
             mCarousel.render();
         }
         if(n === 3) {
-            let previousRamOptions = [];
+            previousRamOptions = [];
             const b = bCarousel.items[Math.round(bCarousel.scrollX)]?.dataset.name || "Xiaomi";
             let mIndex = Math.round(mCarousel.scrollX);
             if (mIndex < 0 || mIndex >= phoneData[b].length) mIndex = 0; 
@@ -886,36 +986,106 @@
             uniqueStorages.forEach((storage, i) => { sh += `<input type="radio" name="storage" id="s${i}" value="${storage}" class="spec-radio" ${i===0?'checked':''}><label for="s${i}" class="spec-label">${storage}</label>`; });
             document.getElementById('storageContainer').innerHTML = sh;
             
-            function updateRamAndPrice(selectedStorage) {
-                let availableConfigs = m.configs.filter(c => c.storage === selectedStorage);
-                let rh = '';
-                availableConfigs.forEach((cfg, i) => {
-                    let oldRam = previousRamOptions[i] || cfg.ram;
-                    let rollingRamHtml = createRollingHtml(oldRam, cfg.ram);
-                    rh += `<input type="radio" name="ram" id="r${i}" value="${cfg.ram}" data-price="${cfg.price}" class="spec-radio" ${i===0?'checked':''}>
-                           <label for="r${i}" class="spec-label flex items-center gap-2">
-                               <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
-                               <span class="flex items-center">${rollingRamHtml}</span>
-                           </label>`;
-                });
-                document.getElementById('ramContainer').innerHTML = rh;
-                previousRamOptions = availableConfigs.map(c => c.ram);
-                updatePrice(availableConfigs[0].price + '元');
-                document.querySelectorAll('input[name="ram"]').forEach(r => r.onchange = (e) => updatePrice(e.target.dataset.price + '元'));
-            }
             document.getElementById('phonePrice').style.color = m.colors[0].hex;
-            updateRamAndPrice(uniqueStorages[0]);
+            updateRamAndPrice(uniqueStorages[0], m.configs);
+            
             document.querySelectorAll('input[name="color"]').forEach(r => r.onchange = (e) => {
                 document.getElementById('phonePrice').style.color = e.target.dataset.hex;
-                const old = document.getElementById('selectedPhoneImg'), src = e.target.value, container = document.getElementById('phoneImageContainer');
+                const old = document.getElementById('selectedPhoneImg');
+                const src = e.target.value;
+                const container = document.getElementById('phoneImageContainer');
+                
                 const next = document.createElement('img');
-                next.src = src; next.className = "absolute top-0 left-0 w-full h-48 object-contain filter drop-shadow-2xl transition-opacity duration-500 opacity-0";
+                next.src = src; 
+                next.className = "absolute top-0 left-0 w-full h-48 object-contain filter drop-shadow-2xl transition-opacity duration-200 ease-in-out opacity-0";
                 container.appendChild(next);
-                requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove('opacity-0')));
-                setTimeout(() => { old.src = src; next.remove(); }, 500);
+                
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        next.classList.remove('opacity-0');
+                    });
+                });
+                
+                setTimeout(() => { 
+                    old.src = src; 
+                    next.remove(); 
+                }, 200);
             });
-            document.querySelectorAll('input[name="storage"]').forEach(r => r.onchange = (e) => updateRamAndPrice(e.target.value));
+            document.querySelectorAll('input[name="storage"]').forEach(r => r.onchange = (e) => updateRamAndPrice(e.target.value, m.configs));
         }
+    }
+
+    function updateRamAndPrice(selectedStorage, allConfigs) {
+        let availableConfigs = allConfigs.filter(c => c.storage === selectedStorage);
+        const numConfigs = availableConfigs.length;
+        const offset = 58; 
+
+        const goo1 = document.getElementById('gooBg1');
+        const goo2 = document.getElementById('gooBg2');
+        const activeHighlight = document.getElementById('activeHighlight');
+        const label0 = document.getElementById('ramLabel0');
+        const label1 = document.getElementById('ramLabel1');
+        const r0 = document.getElementById('r0');
+        const r1 = document.getElementById('r1');
+        
+        if (numConfigs === 1) {
+            // Goo Layer pulls in cleanly
+            goo1.style.transform = `translateX(0)`;
+            goo2.style.transform = `translateX(0) scale(0.5)`;
+            goo2.style.opacity = '0';
+            
+            // Slide Left Pill to Center
+            label0.style.transform = `translateX(0)`;
+            
+            // Right pill fades out quickly and shrinks to prevent text overlapping
+            label1.style.opacity = '0';
+            label1.style.transform = `translateX(0px) scale(0.8)`; 
+            label1.style.pointerEvents = 'none';
+            
+            // Prevent losing active selection state BEFORE moving highlight
+            if (r1.checked) r0.checked = true;
+            
+            // Active Layer slides back to center
+            activeHighlight.style.transform = `translateX(0)`;
+            
+        } else {
+            // Goo Layer oozes apart
+            goo1.style.transform = `translateX(-${offset}px)`;
+            goo2.style.transform = `translateX(${offset}px) scale(1)`;
+            goo2.style.opacity = '1';
+            
+            // Text Layer separates
+            label0.style.transform = `translateX(-${offset}px)`;
+            
+            // Right pill scales up and moves to position
+            label1.style.transform = `translateX(${offset}px) scale(1)`;
+            label1.style.opacity = '1';
+            label1.style.pointerEvents = 'auto';
+            
+            // Active Highlight slides to the currently checked radio position
+            if (r1.checked) {
+                activeHighlight.style.transform = `translateX(${offset}px)`;
+            } else {
+                activeHighlight.style.transform = `translateX(-${offset}px)`;
+            }
+        }
+        
+        // Cleanly update DOM text WITHOUT the rolling slot-machine animation
+        r0.value = availableConfigs[0].ram;
+        r0.dataset.price = availableConfigs[0].price;
+        document.getElementById('ramText0').innerText = availableConfigs[0].ram;
+        
+        if (numConfigs >= 2) {
+            r1.value = availableConfigs[1].ram;
+            r1.dataset.price = availableConfigs[1].price;
+            document.getElementById('ramText1').innerText = availableConfigs[1].ram;
+        }
+        
+        previousRamOptions = availableConfigs.map(c => c.ram);
+        
+        // Price still rolls smoothly
+        let activePrice = document.querySelector('input[name="ram"]:checked').dataset.price;
+        updatePrice(activePrice + '元');
     }
 
     function handleSearch(query) {
