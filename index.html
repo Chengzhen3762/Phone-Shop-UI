@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Phone Shop UI</title>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#f6f6f8">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
+        /* ADDED: Reset margins and set background color to match app */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f6f6f8; /* This prevents the black border */
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
             overflow: hidden;
         }
 
@@ -35,6 +41,9 @@
             border-radius: 0;
             box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.1);
             transition: background-color 0.4s ease;
+            /* ADDED: Padding for the safe area (notch) */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         @media (min-width: 450px) {
@@ -42,6 +51,8 @@
                 height: 90vh;
                 border-radius: 40px;
                 border: 8px solid #1c1c1e;
+                padding-top: 0;
+                padding-bottom: 0;
             }
         }
 
@@ -71,6 +82,8 @@
             display: flex;
             flex-direction: column;
             pointer-events: none;
+            /* ADDED: Keep content inside safe area */
+            padding-top: max(4rem, env(safe-area-inset-top)); 
         }
 
         .screen.active { transform: translateX(0); opacity: 1; pointer-events: all; }
@@ -171,7 +184,7 @@
         }
         
         /* ====== DYNAMIC DARK MODE SYSTEM ====== */
-        .dark-mode { background-color: #121212 !important; }
+        .dark-mode, .dark-mode body { background-color: #121212 !important; }
         .dark-mode .screen { background-color: #121212 !important; }
         .dark-mode .bg-white { background-color: #1c1c1e !important; }
         .dark-mode .text-gray-800 { color: #f6f6f8 !important; }
@@ -259,7 +272,7 @@
             <div id="searchResults" class="flex flex-col gap-3 hidden"></div>
         </div>
     </div>
-    <div id="screen1" class="screen active pt-16 px-8">
+    <div id="screen1" class="screen active px-8">
         <div class="flex justify-between items-center mb-6">
             <div class="relative cursor-pointer hover:scale-110 transition-transform" onclick="toggleMenu()">
                 <svg class="w-6 h-6 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
@@ -286,7 +299,7 @@
         </div>
     </div>
 
-    <div id="screen2" class="screen pt-16 px-8">
+    <div id="screen2" class="screen px-8">
         <div class="flex justify-between items-center mb-6">
             <svg class="w-6 h-6 text-gray-800 cursor-pointer hover:scale-110 transition-transform" onclick="goToScreen(1)" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             <div class="relative cursor-pointer hover:scale-110 transition-transform" onclick="viewCart()">
@@ -307,7 +320,7 @@
         </div>
     </div>
 
-    <div id="screen3" class="screen pt-12 px-6">
+    <div id="screen3" class="screen px-6">
         <button onclick="goToScreen(2)" class="absolute top-12 left-6 text-gray-800 hover:scale-110 transition-transform">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </button>
@@ -343,7 +356,7 @@
         </div>
     </div>
 
-    <div id="screen4" class="screen pt-24 px-6 items-center justify-center">
+    <div id="screen4" class="screen px-6 items-center justify-center">
         <div class="wave-container" id="waveContainer"><div class="wave"></div></div>
         <img id="processingImg" src="" class="h-64 object-contain filter drop-shadow-2xl z-10 transition-transform duration-1000">
         <div class="mt-16 text-center z-10">
@@ -352,7 +365,7 @@
         </div>
     </div>
 
-    <div id="screen5" class="screen pt-16 px-6 items-center">
+    <div id="screen5" class="screen px-6 items-center">
         <button onclick="goToScreen(1)" class="absolute top-12 left-6 w-10 h-10 bg-[#e5e5ea] rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-300 transition hover:scale-105">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -389,7 +402,7 @@
         </div>
     </div>
 
-    <div id="screen7" class="screen pt-20 px-6 items-center bg-[#f6f6f8]">
+    <div id="screen7" class="screen px-6 items-center bg-[#f6f6f8]">
         <button onclick="goToScreen(3)" class="absolute top-12 left-6 w-10 h-10 bg-white shadow-sm border border-gray-100 rounded-full flex items-center justify-center text-gray-800 hover:bg-gray-50 transition hover:scale-105">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </button>
@@ -405,7 +418,7 @@
         </div>
     </div>
 
-    <div id="screen8" class="screen pt-16 px-6 bg-[#f6f6f8]">
+    <div id="screen8" class="screen px-6 bg-[#f6f6f8]">
         <div class="flex items-center mb-8">
             <button onclick="goToScreen(1)" class="w-10 h-10 bg-white shadow-sm border border-gray-100 rounded-full flex items-center justify-center text-gray-800 hover:bg-gray-50 transition hover:scale-105">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -441,7 +454,7 @@
         </div>
     </div>
 
-    <div id="screen9" class="screen pt-16 px-6 bg-[#f6f6f8]">
+    <div id="screen9" class="screen px-6 bg-[#f6f6f8]">
         <div class="flex items-center mb-8">
             <button onclick="goToScreen(8)" class="w-10 h-10 bg-white shadow-sm border border-gray-100 rounded-full flex items-center justify-center text-gray-800 hover:bg-gray-50 transition hover:scale-105">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -533,10 +546,13 @@
 
     function toggleDarkMode(isDark) {
         const app = document.getElementById('app-container');
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
         if (isDark) {
             app.classList.add('dark-mode');
+            if(themeColorMeta) themeColorMeta.setAttribute('content', '#121212');
         } else {
             app.classList.remove('dark-mode');
+            if(themeColorMeta) themeColorMeta.setAttribute('content', '#f6f6f8');
         }
     }
 
