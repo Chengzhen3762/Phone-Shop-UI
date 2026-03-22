@@ -7,19 +7,25 @@
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#f6f6f8">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
-        /* ADDED: Reset margins and set background color to match app */
+        /* THIS CONTROLS THE CAMERA NOTCH AREA */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #f6f6f8; /* This prevents the black border */
+            background-color: #f6f6f8; 
+            transition: background-color 0.4s ease;
+        }
+
+        /* WHEN DARK MODE IS ACTIVE, CHANGE NOTCH AREA TO DARK */
+        html.dark, body.dark {
+            background-color: #121212 !important;
         }
 
         body {
@@ -41,7 +47,6 @@
             border-radius: 0;
             box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.1);
             transition: background-color 0.4s ease;
-            /* ADDED: Padding for the safe area (notch) */
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
         }
@@ -82,7 +87,6 @@
             display: flex;
             flex-direction: column;
             pointer-events: none;
-            /* ADDED: Keep content inside safe area */
             padding-top: max(4rem, env(safe-area-inset-top)); 
         }
 
@@ -184,7 +188,7 @@
         }
         
         /* ====== DYNAMIC DARK MODE SYSTEM ====== */
-        .dark-mode, .dark-mode body { background-color: #121212 !important; }
+        .dark-mode { background-color: #121212 !important; }
         .dark-mode .screen { background-color: #121212 !important; }
         .dark-mode .bg-white { background-color: #1c1c1e !important; }
         .dark-mode .text-gray-800 { color: #f6f6f8 !important; }
@@ -547,11 +551,16 @@
     function toggleDarkMode(isDark) {
         const app = document.getElementById('app-container');
         const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        
         if (isDark) {
             app.classList.add('dark-mode');
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark');
             if(themeColorMeta) themeColorMeta.setAttribute('content', '#121212');
         } else {
             app.classList.remove('dark-mode');
+            document.documentElement.classList.remove('dark');
+            document.body.classList.remove('dark');
             if(themeColorMeta) themeColorMeta.setAttribute('content', '#f6f6f8');
         }
     }
