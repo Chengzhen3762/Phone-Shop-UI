@@ -132,7 +132,10 @@
         /* ====== BUTTON ANIMATIONS ====== */
         .spec-radio { display: none; }
         .spec-label {
-            display: inline-block;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 80px;
             padding: 10px 18px;
             background: #e5e5ea;
             color: #8e8e93;
@@ -191,15 +194,33 @@
             color: #1c1c1e !important;
         }
 
-        /* ====== ROLLING PRICE ANIMATION ====== */
+        /* ====== NEW SLOT MACHINE PRICE ANIMATION ====== */
         #phonePrice { color: #B45325; transition: color 0.5s ease; }
-        .digit-container { display: inline-block; height: 1em; line-height: 1em; overflow: hidden; vertical-align: top; position: relative; }
-        .digit-track { display: block; }
-        .digit-track > span { display: block; height: 1em; line-height: 1em; text-align: center; }
-        .digit-track.animate-roll-up { animation: rollUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .digit-track.animate-roll-down { animation: rollDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        @keyframes rollUp { 0% { transform: translateY(0); } 100% { transform: translateY(-1em); } }
-        @keyframes rollDown { 0% { transform: translateY(-1em); } 100% { transform: translateY(0); } }
+        .digit-container { 
+            display: inline-block; 
+            height: 1em; 
+            line-height: 1em; 
+            overflow: hidden; 
+            vertical-align: top; 
+            position: relative; 
+        }
+        .digit-track { 
+            display: flex; 
+            flex-direction: column; 
+            will-change: transform; 
+        }
+        .digit-track > span { 
+            display: block; 
+            height: 1em; 
+            line-height: 1em; 
+            text-align: center; 
+        }
+        .digit-static { 
+            display: inline-block; 
+            height: 1em; 
+            line-height: 1em; 
+            vertical-align: top; 
+        }
 
         .wave-container {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 0%;
@@ -292,7 +313,7 @@
                 </li>
                 <li class="flex items-center gap-4 cursor-pointer text-gray-800 font-semibold hover:text-[#B45325] transition-colors" onclick="viewCart()">
                     <div class="relative">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 100-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span id="cartBadgeMenu" class="absolute -top-2 -right-2 bg-[#B45325] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
                     </div>
                     Cart
@@ -317,9 +338,9 @@
             <div id="searchTrending">
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 pl-1">Trending</p>
                 <div class="flex gap-2 flex-wrap">
+                    <span class="px-4 py-2 bg-white rounded-full text-[13px] font-semibold text-gray-600 shadow-sm cursor-pointer hover:text-[#B45325] transition-colors" onclick="executeTrendingSearch('Oppo Find X9s Pro')">Oppo Find X9s Pro</span>
                     <span class="px-4 py-2 bg-white rounded-full text-[13px] font-semibold text-gray-600 shadow-sm cursor-pointer hover:text-[#B45325] transition-colors" onclick="executeTrendingSearch('Xiaomi 17 Pro Max')">Xiaomi 17 Pro Max</span>
-                    <span class="px-4 py-2 bg-white rounded-full text-[13px] font-semibold text-gray-600 shadow-sm cursor-pointer hover:text-[#B45325] transition-colors" onclick="executeTrendingSearch('Vivo')">Vivo X300</span>
-                    <span class="px-4 py-2 bg-white rounded-full text-[13px] font-semibold text-gray-600 shadow-sm cursor-pointer hover:text-[#B45325] transition-colors" onclick="executeTrendingSearch('Oppo Find N6')">Oppo Find N6</span>
+                    <span class="px-4 py-2 bg-white rounded-full text-[13px] font-semibold text-gray-600 shadow-sm cursor-pointer hover:text-[#B45325] transition-colors" onclick="executeTrendingSearch('Vivo X300 Ultra')">Vivo X300 Ultra</span>
                 </div>
             </div>
             <div id="searchResults" class="flex flex-col gap-3 hidden"></div>
@@ -383,17 +404,17 @@
             <p class="text-3xl font-bold mt-1 tracking-tight flex justify-center leading-none" id="phonePrice"></p>
         </div>
         <div class="mt-6 relative z-10 h-48 w-full flex justify-center" id="phoneImageContainer">
-            <img id="selectedPhoneImg" src="" class="absolute top-0 left-0 w-full h-48 object-contain filter drop-shadow-2xl z-10" alt="Selected Phone">
+            <img id="selectedPhoneImg" src="" class="absolute top-0 left-0 w-full h-48 object-contain filter drop-shadow-2xl z-10 mix-blend-darken dark:mix-blend-normal" alt="Selected Phone">
         </div>
         
         <div class="mt-8 mb-10 space-y-5 relative z-10 text-center">
             <div>
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3">Color</p>
-                <div id="colorContainer" class="flex justify-center gap-2 flex-wrap"></div>
+                <div id="colorContainer" class="flex justify-center gap-2 flex-wrap items-center"></div>
             </div>
             <div>
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3">Storage</p>
-                <div id="storageContainer" class="flex justify-center gap-3 flex-wrap"></div>
+                <div id="storageContainer" class="flex justify-center gap-3 flex-wrap items-center"></div>
             </div>
             <div>
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3">Memory (RAM)</p>
@@ -439,7 +460,7 @@
 
     <div id="screen4" class="screen px-6 items-center justify-center">
         <div class="wave-container" id="waveContainer"><div class="wave"></div></div>
-        <img id="processingImg" src="" class="h-64 object-contain filter drop-shadow-2xl z-10 transition-transform duration-1000">
+        <img id="processingImg" src="" class="h-64 object-contain filter drop-shadow-2xl z-10 transition-transform duration-1000 mix-blend-darken dark:mix-blend-normal">
         <div class="mt-16 text-center z-10">
             <h2 class="text-2xl font-bold text-gray-800">Almost done!</h2>
             <p class="text-gray-500 mt-2" id="loadingText">Configuring hardware...</p>
@@ -453,8 +474,8 @@
         <div id="successCheckmark" class="w-14 h-14 rounded-full flex items-center justify-center text-white mt-12 mb-6 transition-all duration-500">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
         </div>
-        <h2 class="text-[22px] font-medium text-gray-800 text-center leading-snug">Your phone is ready,<br>Enjoy!</h2>
-        <img id="finalImg" src="" class="h-80 object-contain filter drop-shadow-2xl mt-8" alt="Phone">
+        <h2 class="text-[28px] font-medium text-gray-800 text-center leading-snug">Your phone is ready,<br>Enjoy!</h2>
+        <img id="finalImg" src="" class="h-80 object-contain filter drop-shadow-2xl mt-8 mix-blend-darken dark:mix-blend-normal" alt="Phone">
         <div class="mt-auto mb-14 flex justify-center w-full">
             <button onclick="goToScreen(1)" class="bg-[#1c1c1e] text-white px-8 py-3.5 rounded-full text-[15px] font-semibold hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-2 tracking-wide">
                 Thanks ➔
@@ -577,7 +598,6 @@
     let previousRamOptions = [];
     let currentUser = { name: "User", pfpDataUrl: null };
 
-    // Function to calculate exact perceptual brightness of a color to perfectly find "Lightest" and "Darkest"
     function getLuminance(hex) {
         hex = hex.replace('#', '');
         if(hex.length === 3) hex = hex.split('').map(x => x+x).join('');
@@ -585,13 +605,10 @@
         return 0.299 * r + 0.587 * g + 0.114 * b;
     }
 
-    // ====== NEW CONTRAST CHECKER LOGIC ======
     function getContrastHex(hex) {
         const isDark = document.documentElement.classList.contains('dark');
         const lum = getLuminance(hex);
-        // If the background is light and the phone color is too light, force dark grey text
         if (!isDark && lum > 180) return '#1c1c1e';
-        // If the background is dark and the phone color is too dark, force light text
         if (isDark && lum < 80) return '#f6f6f8';
         return hex;
     }
@@ -612,7 +629,7 @@
         const container = document.getElementById('phoneImageContainer');
         const nextImg = document.createElement('img');
         nextImg.src = newSrc;
-        nextImg.className = "absolute top-0 left-0 w-full h-48 object-contain filter drop-shadow-2xl transition-opacity duration-300 opacity-0 z-20";
+        nextImg.className = "absolute top-0 left-0 w-full h-48 object-contain filter drop-shadow-2xl transition-opacity duration-300 opacity-0 z-20 mix-blend-darken dark:mix-blend-normal";
         container.appendChild(nextImg);
 
         void nextImg.offsetWidth;
@@ -629,7 +646,9 @@
         if (searchInput && searchInput.value) handleSearch(searchInput.value);
         
         if (!window.bCarousel || !window.mCarousel) return;
-        const b = window.bCarousel.items[Math.round(window.bCarousel.scrollX)]?.dataset.name || "Xiaomi";
+        
+        const brandObj = window.bCarousel.items[Math.round(window.bCarousel.scrollX)];
+        const b = brandObj ? brandObj.dataset.name : Object.keys(phoneData)[0];
         
         const carouselItems = document.querySelectorAll('#modelCarousel .carousel-item img');
         if(carouselItems.length > 0 && phoneData[b]) {
@@ -647,8 +666,6 @@
                 const targetColor = m.colors.find(c => c.img === displayImg);
                 
                 smoothImageSwap(displayImg);
-                
-                // Use Contrast Checker for Phone Price
                 document.getElementById('phonePrice').style.color = getContrastHex(targetColor.hex);
                 
                 document.querySelectorAll('input[name="color"]').forEach(r => {
@@ -680,8 +697,6 @@
             if(themeColorMeta) themeColorMeta.setAttribute('content', '#f6f6f8');
         }
         updateThemeImages();
-        
-        // Refresh Cart Screen Colors if Toggled
         if (myCart.length > 0) renderCartItems();
     }
 
@@ -772,33 +787,54 @@
         }
     }
 
-    function createRollingHtml(oldStr, newStr) {
-        if (!oldStr || oldStr === newStr) {
-            let html = '';
-            for (let i = 0; i < newStr.length; i++) html += `<span class="digit-container"><span class="digit-track"><span>${newStr[i]}</span></span></span>`;
-            return html;
-        }
-        const oldVal = parseInt(oldStr) || 0; const newVal = parseInt(newStr) || 0; let html = '';
-        for (let i = 0; i < Math.max(oldStr.length, newStr.length); i++) {
-            const oc = oldStr[i] || ''; const nc = newStr[i] || '';
-            if (oc !== nc && oldVal !== 0 && newVal !== 0) {
-                const span1 = newVal > oldVal ? oc : nc; const span2 = newVal > oldVal ? nc : oc;
-                const animClass = newVal > oldVal ? 'animate-roll-up' : 'animate-roll-down';
-                html += `<span class="digit-container"><span class="digit-track ${animClass}"><span>${span1}</span><span>${span2}</span></span></span>`;
-            } else {
-                html += `<span class="digit-container"><span class="digit-track"><span>${nc}</span></span></span>`;
-            }
-        }
-        return html;
-    }
-
+    // ====== NEW: Slot Machine Price Update Logic ======
     function updatePrice(newPriceStr) {
         const el = document.getElementById('phonePrice');
         const oldPriceStr = el.dataset.currentPrice || '';
         if (oldPriceStr === newPriceStr) return;
-        el.innerHTML = createRollingHtml(oldPriceStr, newPriceStr);
+
+        if (oldPriceStr.length !== newPriceStr.length || !el.querySelector('.digit-track')) {
+            let html = '';
+            for (let i = 0; i < newPriceStr.length; i++) {
+                let char = newPriceStr[i];
+                if (isNaN(parseInt(char))) {
+                    html += `<span class="digit-container"><span class="digit-static">${char}</span></span>`;
+                } else {
+                    html += `<span class="digit-container">
+                                <span class="digit-track" style="transform: translateY(0em); transition: none;">
+                                    <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                                </span>
+                             </span>`;
+                }
+            }
+            el.innerHTML = html;
+            
+            void el.offsetWidth;
+            
+            const tracks = el.querySelectorAll('.digit-track');
+            let trackIndex = 0;
+            for (let i = 0; i < newPriceStr.length; i++) {
+                let char = newPriceStr[i];
+                if (!isNaN(parseInt(char))) {
+                    tracks[trackIndex].style.transition = 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                    tracks[trackIndex].style.transform = `translateY(-${parseInt(char)}em)`;
+                    trackIndex++;
+                }
+            }
+        } else {
+            const tracks = el.querySelectorAll('.digit-track');
+            let trackIndex = 0;
+            for (let i = 0; i < newPriceStr.length; i++) {
+                let char = newPriceStr[i];
+                if (!isNaN(parseInt(char))) {
+                    tracks[trackIndex].style.transform = `translateY(-${parseInt(char)}em)`;
+                    trackIndex++;
+                }
+            }
+        }
         el.dataset.currentPrice = newPriceStr;
     }
+    // =================================================
 
     function toggleMenu() {
         const menu = document.getElementById('sideMenu');
@@ -879,6 +915,38 @@
         ],
         "Oppo": [
             {
+                name: "Oppo Find X9s Pro",
+                subtitle: "Hasselblad Camera for Mobile",
+                colors: [
+                    { name: "Native Titanium", img: "Oppo/findx9sproNativeTitanium.png", hex: "#918a85" },
+                    { name: "Energetic Orange", img: "Oppo/findx9sproEnergeticOrange.png", hex: "#e8987b" },
+                    { name: "Free White", img: "Oppo/findx9sproFreeWhite.png", hex: "#e9e9f0" },
+                    { name: "Riding The Wind", img: "Oppo/findx9sproRidingTheWind.png", hex: "#73d4c3" }
+                ],
+                configs: [
+                    { storage: "256GB", ram: "12GB", price: "5299" },
+                    { storage: "512GB", ram: "12GB", price: "5699" },
+                    { storage: "512GB", ram: "16GB", price: "5999" },
+                    { storage: "1TB", ram: "16GB", price: "6999" }
+                ]
+            },
+            {
+                name: "Oppo Find X9 Ultra",
+                subtitle: "Hasselblad Master Camera",
+                colors: [
+                    { name: "Tundra", img: "Oppo/findx9UltraTundra.png", hex: "#404040" },
+                    { name: "Polar Glaciers", img: "Oppo/findx9UltraPolarGlaciers.png", hex: "#f0f2f5" },
+                    { name: "Rongsha Canyon", img: "Oppo/findx9UltraRongshaCanyon.png", hex: "#e08d5c" }
+                ],
+                configs: [
+                    { storage: "256GB", ram: "12GB", price: "7499" },
+                    { storage: "512GB", ram: "12GB", price: "7999" },
+                    { storage: "512GB", ram: "16GB", price: "8499" },
+                    { storage: "1TB (Satellite)", ram: "16GB", price: "9499" },
+                    { storage: "1TB (Hasselblad Master Set)", ram: "16GB", price: "11999" }
+                ]
+            },
+            {
                 name: "Oppo Find X8 Ultra",
                 subtitle: "Hasselblad Camera for Mobile",
                 colors: [
@@ -911,6 +979,22 @@
         ],
         "Vivo": [
             {
+                name: "Vivo X300 Ultra",
+                subtitle: "Ultimate Photography Flagship",
+                colors: [
+                    { name: "Black Ka", img: "Vivo/X300UltraBlackKa.png", hex: "#4a4a4c" },
+                    { name: "Silver Tone", img: "Vivo/X300UltraSilverTone.png", hex: "#f0f0f2" },
+                    { name: "Film Green", img: "Vivo/X300UltraFilmGreen.png", hex: "#b4c3a2" }
+                ],
+                configs: [
+                    { storage: "256GB", ram: "12GB", price: "6999" },
+                    { storage: "512GB", ram: "12GB", price: "7499" },
+                    { storage: "512GB", ram: "16GB", price: "7999" },
+                    { storage: "1TB (Satellite)", ram: "16GB", price: "8999" },
+                    { storage: "1TB (Photo Kit)", ram: "16GB", price: "11999" }
+                ]
+            },
+            {
                 name: "Vivo X300",
                 subtitle: "Flagship Photography",
                 colors: [
@@ -926,6 +1010,23 @@
                     { storage: "512GB", ram: "12GB", price: "5299" },
                     { storage: "512GB", ram: "16GB", price: "5699" },
                     { storage: "1TB", ram: "16GB", price: "6299" }
+                ]
+            },
+            {
+                name: "Vivo X300s",
+                subtitle: "Slim & Powerful Flagship",
+                colors: [
+                    { name: "Silver", img: "Vivo/x300sSilver.png", hex: "#e6e8eb" },
+                    { name: "Titanium Black", img: "Vivo/x300sTitaniumBlack.png", hex: "#4b4b4d" },
+                    { name: "Film Green", img: "Vivo/x300sFilmGreen.png", hex: "#dae3d2" },
+                    { name: "Dream Core Purple", img: "Vivo/x300sDreamCorePurple.png", hex: "#e0d7f2" }
+                ],
+                configs: [
+                    { storage: "256GB", ram: "12GB", price: "4999" },
+                    { storage: "512GB", ram: "12GB", price: "5499" },
+                    { storage: "512GB", ram: "16GB", price: "5999" },
+                    { storage: "1TB", ram: "16GB", price: "6999" },
+                    { storage: "1TB (Photo Kit)", ram: "16GB", price: "7999" }
                 ]
             },
             {
@@ -951,8 +1052,12 @@
         const bc = document.getElementById('brandCarousel');
         let html = '';
         Object.keys(phoneData).forEach(brand => {
-            let logoSrc = brand === 'Vivo' ? 'Vivo/Vivo.png' : (brand === 'Oppo' ? 'Oppo/oppo.jpg' : 'Xiaomi/Xiaomi_logo.png');
-            let style = brand === 'Vivo' ? 'object-fit: contain; padding: 10px;' : 'object-fit: cover;';
+            let logoSrc = 'Xiaomi/Xiaomi_logo.png';
+            if (brand === 'Vivo') logoSrc = 'Vivo/Vivo.png';
+            else if (brand === 'Oppo') logoSrc = 'Oppo/oppo.jpg';
+
+            let style = (brand === 'Vivo') ? 'object-fit: contain; padding: 10px;' : 'object-fit: cover;';
+
             html += `
             <div class="carousel-item" data-name="${brand}">
                 <img src="${logoSrc}" alt="${brand}" style="${style} filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.15));">
@@ -962,7 +1067,6 @@
         bc.innerHTML = html;
     }
     
-    // ====== MAIN INITIALIZATION ======
     window.onload = () => {
         initBrands();
         window.bCarousel = new ArcCarousel('brandCarousel');
@@ -997,7 +1101,9 @@
             bCarousel.render(); 
         }
         if(n === 2) {
-            const b = bCarousel.items[Math.round(bCarousel.scrollX)]?.dataset.name || "Xiaomi";
+            const brandObj = bCarousel.items[Math.round(bCarousel.scrollX)];
+            const b = brandObj ? brandObj.dataset.name : Object.keys(phoneData)[0];
+            
             document.getElementById('brandTitleLabel').innerText = b;
             let h = ''; 
             phoneData[b].forEach(m => {
@@ -1010,7 +1116,9 @@
         }
         if(n === 3) {
             previousRamOptions = [];
-            const b = bCarousel.items[Math.round(bCarousel.scrollX)]?.dataset.name || "Xiaomi";
+            const brandObj = bCarousel.items[Math.round(bCarousel.scrollX)];
+            const b = brandObj ? brandObj.dataset.name : Object.keys(phoneData)[0];
+            
             let mIndex = Math.round(mCarousel.scrollX);
             if (mIndex < 0 || mIndex >= phoneData[b].length) mIndex = 0; 
             const m = phoneData[b][mIndex];
@@ -1026,12 +1134,10 @@
             let sh = ''; uniqueStorages.forEach((storage, i) => { sh += `<input type="radio" name="storage" id="s${i}" value="${storage}" class="spec-radio" ${i===0?'checked':''}><label for="s${i}" class="spec-label">${storage}</label>`; });
             document.getElementById('storageContainer').innerHTML = sh;
             
-            // Use Contrast Checker for Initial Price Color
             document.getElementById('phonePrice').style.color = getContrastHex(m.colors.find(c => c.img === themeImg).hex);
             updateRamAndPrice(uniqueStorages[0], m.configs);
             
             document.querySelectorAll('input[name="color"]').forEach(r => r.onchange = (e) => {
-                // Use Contrast Checker for Dynamic Color Clicks
                 document.getElementById('phonePrice').style.color = getContrastHex(e.target.dataset.hex);
                 smoothImageSwap(e.target.value);
             });
@@ -1102,7 +1208,9 @@
     }
 
     function getSelectedConfig() {
-        const brand = bCarousel.items[Math.round(bCarousel.scrollX)]?.dataset.name || "Xiaomi";
+        const brandObj = bCarousel.items[Math.round(bCarousel.scrollX)];
+        const brand = brandObj ? brandObj.dataset.name : Object.keys(phoneData)[0];
+        
         const model = phoneData[brand][Math.max(0, Math.round(mCarousel.scrollX))];
         const colorInput = document.querySelector('input[name="color"]:checked');
         return { brand, modelName: model.name, color: colorInput.nextElementSibling.innerText, img: colorInput.value, hex: colorInput.dataset.hex, storage: document.querySelector('input[name="storage"]:checked').value, ram: document.querySelector('input[name="ram"]:checked').value, price: document.querySelector('input[name="ram"]:checked').dataset.price };
@@ -1110,8 +1218,6 @@
 
     function addToCart() {
         const config = getSelectedConfig(); myCart.push(config); updateCartBadges();
-        
-        // Use Contrast Checker for Cart Added Items
         const displayHex = getContrastHex(config.hex);
         document.getElementById('singleAddedItem').innerHTML = `<div class="bg-white p-6 rounded-3xl shadow-lg shadow-black/5 w-full border border-gray-100 flex flex-col items-center justify-center"><img src="${config.img}" class="h-40 object-contain filter drop-shadow-md mb-6"><h3 class="font-bold text-gray-800 text-[18px] text-center mb-1">${config.modelName}</h3><p class="text-gray-600 font-medium text-center mb-3 text-[14px]">${config.color} | ${config.storage} | ${config.ram}</p><p style="color: ${displayHex};" class="text-2xl font-bold text-center">${config.price}元</p></div>`;
         goToScreen(7);
@@ -1130,8 +1236,6 @@
         clearBtn.style.display = 'flex'; let html = '', total = 0;
         myCart.forEach((item) => {
             total += parseInt(item.price);
-            
-            // Use Contrast Checker for Cart Items
             const displayHex = getContrastHex(item.hex);
             html += `<div class="bg-white p-6 rounded-3xl shadow-lg shadow-black/5 w-full border border-gray-100 flex flex-col items-center justify-center"><img src="${item.img}" class="h-40 object-contain filter drop-shadow-md mb-6"><h3 class="font-bold text-gray-800 text-[18px] text-center mb-1">${item.modelName}</h3><p class="text-gray-600 font-medium text-center mb-3 text-[14px]">${item.color} | ${item.storage} | ${item.ram}</p><p style="color: ${displayHex};" class="text-2xl font-bold text-center">${item.price}元</p></div>`;
         });
